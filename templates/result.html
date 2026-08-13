@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Resume Analysis</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        .header {
+            background: #1f2937;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+        }
+
+        .header p {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .file-name {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #555;
+        }
+
+        .score-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .score-card {
+            flex: 1;
+            min-width: 280px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .score-label {
+            color: #666;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .match-level {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        ul {
+            padding-left: 25px;
+            line-height: 1.8;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            resize: vertical;
+            font-family: Arial, sans-serif;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 40px;
+        }
+
+        .print-button {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 8px;
+            background: #1f2937;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .print-button:hover {
+            opacity: 0.9;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 12px 22px;
+            border-radius: 8px;
+            background: #e5e7eb;
+            color: #222;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            opacity: 0.9;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .header {
+                background: white;
+                color: black;
+                border-bottom: 1px solid #ccc;
+            }
+
+            .card,
+            .score-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+            .button-container {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>AI Resume Analyzer</h1>
+    <p>Your Resume Analysis Report</p>
+</div>
+
+<div class="container">
+
+    <!-- Resume filename -->
+    <p class="file-name">
+        <strong>Resume:</strong> {{ filename }}
+    </p>
+
+
+    <!-- Score cards -->
+    <div class="score-container">
+
+        <div class="score-card">
+
+            <div class="score-label">
+                Overall Resume Score
+            </div>
+
+            <div class="score-number">
+                {{ score }}%
+            </div>
+
+            <p>
+                Based on detected skills
+            </p>
+
+        </div>
+
+
+        <div class="score-card">
+
+            <div class="score-label">
+                Job Match Score
+            </div>
+
+            <div class="score-number">
+                {{ job_match_score }}%
+            </div>
+
+            <div class="match-level">
+                {{ match_level }}
+            </div>
+
+            <p>
+                Based on the job description
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Skills found -->
+    <div class="card">
+
+        <h2>
+            Skills Found in Resume
+        </h2>
+
+        {% if found_skills %}
+
+            <ul>
+
+                {% for skill in found_skills %}
+
+                    <li>
+                        {{ skill }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>
+                No matching skills found.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Required skills -->
+    <div class="card">
+
+        <h2>
+            Required Skills in Job
+        </h2>
+
+        {% if required_skills %}
+
+            <ul>
+
+                {% for skill in required_skills %}
+
+                    <li>
+                        {{ skill }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>
+                No known skills detected in the job description.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Matched job skills -->
+    <div class="card">
+
+        <h2>
+            Matched Job Skills
+        </h2>
+
+        {% if matched_job_skills %}
+
+            <ul>
+
+                {% for skill in matched_job_skills %}
+
+                    <li>
+                        {{ skill }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>
+                No matching job skills found.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Missing job skills -->
+    <div class="card">
+
+        <h2>
+            Missing Job Skills
+        </h2>
+
+        {% if missing_job_skills %}
+
+            <ul>
+
+                {% for skill in missing_job_skills %}
+
+                    <li>
+                        {{ skill }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>
+                No missing job skills detected. ✅
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Resume missing skills -->
+    <div class="card">
+
+        <h2>
+            Resume Missing Skills
+        </h2>
+
+        {% if missing_skills %}
+
+            <ul>
+
+                {% for skill in missing_skills %}
+
+                    <li>
+                        {{ skill }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>
+                No missing skills from the current database. ✅
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Recommendations -->
+    <div class="card">
+
+        <h2>
+            Recommendations
+        </h2>
+
+        {% if recommendations %}
+
+            <ul>
+
+                {% for recommendation in recommendations %}
+
+                    <li>
+                        {{ recommendation }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>
+                Your resume looks good based on the current skill database! ✅
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Job description -->
+    <div class="card">
+
+        <h2>
+            Job Description
+        </h2>
+
+        <textarea readonly>{{ job_description }}</textarea>
+
+    </div>
+
+
+    <!-- Buttons -->
+    <div class="button-container">
+
+        <button
+            class="print-button"
+            onclick="window.print()"
+        >
+            🖨️ Download / Print Report
+        </button>
+
+        <a
+            class="back-button"
+            href="/"
+        >
+            ← Analyze Another Resume
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>
