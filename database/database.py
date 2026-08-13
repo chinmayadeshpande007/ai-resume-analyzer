@@ -86,3 +86,16 @@ def save_job_skills(job_id, skill_names):
 
     conn.commit()
     conn.close()
+
+def init_database():
+    conn = get_connection()
+
+    with open('database/schema.sql', 'r', encoding='utf-8') as file:
+        schema = file.read()
+
+    conn.executescript(schema)
+    conn.commit()
+    conn.close()
+
+
+init_database()
