@@ -35,3 +35,13 @@ CREATE TABLE IF NOT EXISTS job_skills (
     FOREIGN KEY (skill_id) REFERENCES skills(id),
     PRIMARY KEY (job_id, skill_id)
 );
+INSERT OR IGNORE INTO skills (name) VALUES ('Python');
+INSERT OR IGNORE INTO skills (name) VALUES ('Java');
+INSERT OR IGNORE INTO skills (name) VALUES ('C++');
+INSERT OR IGNORE INTO skills (name) VALUES ('SQL');
+INSERT OR IGNORE INTO skills (name) VALUES ('HTML');
+INSERT OR IGNORE INTO skills (name) VALUES ('MATLAB');
+INSERT OR IGNORE INTO skills (name) VALUES ('Machine Learning');
+INSERT OR IGNORE INTO skills (name) VALUES ('Deep Learning');
+INSERT OR IGNORE INTO skills (name) VALUES ('Data Structures and Algorithms');
+INSERT OR IGNORE INTO skills (name) VALUES ('Database Management');
